@@ -75,4 +75,12 @@ class Exercise4Test extends FlatSpecLike with Matchers {
       case Right(v) => fail("should not be right")
     }
   }
+
+  it should "orElse on either type" in {
+    Either.Try2 {"123".toInt}.orElse(Right(3)) shouldBe Right(123)
+    Either.Try2 {"123".toInt}.orElse(Left(3)) shouldBe Right(123)
+
+    Either.Try2 {"xyz".toInt}.orElse(Right(3)) shouldBe Right(3)
+    Either.Try2 {"xyz".toInt}.orElse(Left(3)) shouldBe Left(3)
+  }
 }
