@@ -176,8 +176,6 @@ object List {
     }
   }
 
-  def hasSubSequence[A](sup: List[A], sub: List[A]): Boolean = {
-    true
-  }
+  def hasSubSequence[A](sup: List[A], sub: List[A]): Boolean = ???
 
 }
