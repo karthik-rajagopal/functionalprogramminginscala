@@ -1,8 +1,8 @@
 # functionalprogramminginscala
 My solutions to the exercises in the book Functional Programming in Scala (the red book)
 
-#Compile
+# Compile
 sbt clean compile
 
-#Run Tests
+# Run Tests
 sbt test
