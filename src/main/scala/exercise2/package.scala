@@ -20,22 +20,10 @@ package object exercise2 {
   }
 
   def fibo(n: Int): Int = {
-    println(s"calling fibo of $n")
     n match {
-      case 0 => {
-        println("returning 0 ")
-        0
-      }
-      case 1 => {
-        println("returning 1 ")
-        1
-      }
-      case _ => {
-        val x = fibo(n - 1)
-        val y = fibo(n - 2)
-        println(s"x = $x and y = $y")
-        x + y
-      }
+      case 0 => 0
+      case 1 => 1
+      case _ => fibo(n - 1) + fibo(n - 2)
     }
   }
 
