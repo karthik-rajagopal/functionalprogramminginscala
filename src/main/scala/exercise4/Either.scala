@@ -34,4 +34,13 @@ object Either {
       case e: Exception => Left(e)
     }
   }
+
+  def sequence[E, A](es: List[Either[E, A]]): Either[E, List[A]] = es match {
+    case Nil => Right(Nil)
+    case head :: tail =>
+      for {
+        h <- head
+        t <- sequence(tail)
+      } yield h::t
+  }
 }

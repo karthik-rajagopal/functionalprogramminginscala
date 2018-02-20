@@ -91,4 +91,13 @@ class Exercise4Test extends FlatSpecLike with Matchers {
       case Right(v) => fail("should not be right")
     }
   }
+
+  it should "return sequence for either type" in {
+    Either.sequence(List(Either.Try2 {"1".toInt}, Either.Try2 {"2".toInt})) shouldBe Right(List(1, 2))
+
+    Either.sequence(List(Either.Try2 {"xxx".toInt}, Either.Try2 {"2".toInt})) match {
+      case Left(error) => error.getMessage startsWith "number format exception"
+      case Right(v) => fail("should not be right")
+    }
+  }
 }
