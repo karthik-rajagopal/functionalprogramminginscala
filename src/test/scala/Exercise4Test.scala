@@ -1,12 +1,17 @@
 package exercise4
 
 import exercise4.Option._
+import org.scalacheck.Gen
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FlatSpecLike, Matchers}
 
-class Exercise4Test extends FlatSpecLike with Matchers {
+
+class Exercise4Test extends FlatSpecLike with Matchers with GeneratorDrivenPropertyChecks {
 
   it should "init option type with a value to Some" in {
-    Option(4) shouldBe Some(4)
+    forAll(Gen.choose(0, Long.MaxValue)) { case (x) =>
+        Option(x) shouldBe Some(x)
+    }
   }
 
   it should "init option type without any value to None" in {
@@ -14,27 +19,51 @@ class Exercise4Test extends FlatSpecLike with Matchers {
   }
 
   it should "map to a different data type" in {
-    Option(10).map(x => x.toString) shouldBe Some("10")
+    forAll(Gen.choose(0, Long.MaxValue)) { case (gen) =>
+      Option(gen).map(x => x.toString) shouldBe Some(gen.toString)
+    }
   }
 
   it should "flatmap to an option type" in {
-    val res = Option(Option(10)).flatMap { x => x }
-    res shouldBe Some(10)
+    forAll(Gen.choose(Long.MinValue, Long.MaxValue)) { case (gen) =>
+      Option(Option(gen)).flatMap { x => x } shouldBe Some(gen)
+    }
   }
 
   it should "get the value or else" in {
-    Option(2).getOrElse(4) shouldBe 2
-    Option(null).getOrElse(4) shouldBe 4
+    forAll(
+      for {
+        n <- Gen.choose(Long.MinValue, Long.MaxValue)
+        m <- Gen.choose(Long.MinValue, Long.MaxValue) suchThat (_ != n)
+      } yield (n, m)) { case (gen1, gen2) =>
+      Option(gen1).getOrElse(gen2) shouldBe gen1
+      Option(null).getOrElse(gen2) shouldBe gen2
+    }
   }
 
   it should "perform orElse" in {
-    Option(2).orElse(Some(4)) shouldBe Some(2)
-    Option(null).orElse(Some(4)) shouldBe Some(4)
+    forAll(
+      for {
+        n <- Gen.choose(Long.MinValue, Long.MaxValue)
+        m <- Gen.choose(Long.MinValue, Long.MaxValue) suchThat (_ != n)
+      } yield (n, m)) { case (gen1, gen2) =>
+      Option(gen1).orElse(Some(gen2)) shouldBe Some(gen1)
+      Option(null).orElse(Some(gen2)) shouldBe Some(gen2)
+    }
   }
 
   it should "filter" in {
-    Option(3).filter(_ % 2 == 0) shouldBe None
-    Option(4).filter(_ % 2 == 0) shouldBe Some(4)
+    forAll(
+      for {
+        evenNums <- Gen.choose(Long.MinValue, Long.MaxValue) suchThat (x => (x & 1) == 0)
+        oddNums <- Gen.choose(Long.MinValue, Long.MaxValue) suchThat (x => (x & 1) != 0)
+      } yield (evenNums, oddNums)) { case (even, odd) =>
+      Option(even).filter(_ % 2 == 0) shouldBe Some(even)
+      Option(even).filter(_ % 2 != 0) shouldBe None
+
+      Option(odd).filter(_ % 2 == 0) shouldBe None
+      Option(odd).filter(_ % 2 != 0) shouldBe Some(odd)
+    }
   }
 
   it should "return the variance in a list of doubles" in {
@@ -44,8 +73,14 @@ class Exercise4Test extends FlatSpecLike with Matchers {
   }
 
   it should "lift functions" in {
-    map2(Some(1), Some(2)) {_ + _} shouldBe Some(3)
-    map2_1(Some(1), Some(2)) {_ + _} shouldBe Some(3)
+    forAll(
+      for {
+        num1 <- Gen.choose(Long.MinValue, Long.MaxValue)
+        num2 <- Gen.choose(Long.MinValue, Long.MaxValue) suchThat (_ != num1)
+      } yield (num1, num2)) { case (num1, num2) =>
+      map2(Some(num1), Some(num2)) {_ + _} shouldBe Some(num1 + num2)
+      map2_1(Some(num1), Some(num2)) {_ + _} shouldBe Some(num1 + num2)
+    }
   }
 
   it should "return sequence" in {

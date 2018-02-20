@@ -1,6 +1,5 @@
 package exercise4
 
-import exercise4.Option.traverse
 
 sealed trait Either[+E, +A] {
   def map[B](f: A => B): Either[E, B] = this match {
