@@ -1,10 +1,9 @@
 package exercise4
 
 import exercise4.Option._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{FlatSpecLike, Matchers}
 
-class Exercise4Test
-  extends FlatSpec with Matchers {
+class Exercise4Test extends FlatSpecLike with Matchers {
 
   it should "init option type with a value to Some" in {
     Option(4) shouldBe Some(4)
@@ -57,5 +56,15 @@ class Exercise4Test
   it should "traverse" in {
     traverse(List("1", "xxxx", "3")) { x => Try(x.toInt) } shouldBe None
     traverse(List("1", "2", "3")) { x => Try(x.toInt) } shouldBe Some(List(1, 2, 3))
+  }
+
+  it should "map on Either type" in {
+    Right(4).map(_.toString) shouldBe Right("4")
+    Left(4).map(_.toString) shouldBe Left(4) // right aligned
+
+    Either.Try2 {"xxx".toInt}.map(_ + 2) match {
+      case Left(error) => error.getMessage startsWith "number format exception"
+      case Right(v) => fail("should not be right")
+    }
   }
 }
