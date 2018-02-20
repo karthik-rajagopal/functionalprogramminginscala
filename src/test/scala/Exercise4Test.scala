@@ -83,4 +83,12 @@ class Exercise4Test extends FlatSpecLike with Matchers {
     Either.Try2 {"xyz".toInt}.orElse(Right(3)) shouldBe Right(3)
     Either.Try2 {"xyz".toInt}.orElse(Left(3)) shouldBe Left(3)
   }
+
+  it should "map2 on either type" in {
+    Either.Try2 {"1".toInt}.map2(Either.Try2 {"2".toInt}){_ + _} shouldBe Right(3)
+    Either.Try2 {"xx".toInt}.map2(Either.Try2 {"2".toInt}){_ + _} match {
+      case Left(error) => error.getMessage startsWith "number format exception"
+      case Right(v) => fail("should not be right")
+    }
+  }
 }
