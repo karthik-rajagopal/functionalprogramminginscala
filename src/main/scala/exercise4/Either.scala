@@ -1,5 +1,7 @@
 package exercise4
 
+import exercise4.Option.traverse
+
 sealed trait Either[+E, +A] {
   def map[B](f: A => B): Either[E, B] = this match {
     case Left(e) => Left(e)
@@ -37,10 +39,17 @@ object Either {
 
   def sequence[E, A](es: List[Either[E, A]]): Either[E, List[A]] = es match {
     case Nil => Right(Nil)
-    case head :: tail =>
-      for {
-        h <- head
-        t <- sequence(tail)
-      } yield h::t
+    case head :: tail => for {
+      h <- head
+      t <- sequence(tail)
+    } yield h::t
+  }
+
+  def traverse[E, A, B](as: List[A])(implicit f: A => Either[E, B]): Either[E, List[B]] = as match {
+    case Nil => Right(Nil)
+    case x:: xs => for {
+      a <- f(x)
+      aa <- traverse(xs)
+    } yield a :: aa
   }
 }

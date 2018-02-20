@@ -100,4 +100,8 @@ class Exercise4Test extends FlatSpecLike with Matchers {
       case Right(v) => fail("should not be right")
     }
   }
+
+  it should "traverse an either type" in {
+    Either.traverse(List(Right("1"), Right("2"))) { x => Either.Try2(x.value.toInt) } shouldBe Right(List(1, 2))
+  }
 }
