@@ -25,11 +25,28 @@ sealed trait Stream[+A] {
 
   def take(n: Int): Stream[A] = this match {
     case Empty => empty
-    case Cons(h, t) if n > 1 => cons(h(), t().take(n - 1))
     case Cons(h, _) if n == 1 => cons(h(), empty)
+    case Cons(h, t) => cons(h(), t().take(n - 1))
   }
 
-  def takeWhile(p: A => Boolean): Stream[A] = ???
+  def takeRecurse(n: Int): Stream[A] = {
+    @tailrec
+    def go(input: Stream[A], acc: Stream[A], n: Int): Stream[A] = input match {
+      case Empty => acc
+      case Cons(h, _) if n == 1 => cons(h(), empty)
+      case Cons(h, t) => go(t(), cons(h(), acc), n - 1)
+    }
+    go(this, empty, n)
+  }
+
+  def takeWhile(p: A => Boolean): Stream[A] = {
+    @tailrec
+    def go(input: Stream[A], acc: Stream[A]): Stream[A] = input match {
+      case Cons(h, t) if p(h()) => go(t(), cons(h(), acc))
+      case _ => acc
+    }
+    go(this, empty)
+  }
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
