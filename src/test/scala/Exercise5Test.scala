@@ -37,4 +37,13 @@ class Exercise5Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
       Stream(randomInts:_*).takeWhile(isEven).toListRecurse shouldBe List(randomInts:_*).takeWhile(isEven)
     }
   }
+
+  it should "return true if an element exists in the stream" in {
+    forAll(Gen.choose(0, 10000) suchThat(_ > 0)) { case (genSize) =>
+      val isEven: Int => Boolean = x => (x & 1) == 0
+      val randomInts = Seq.fill(genSize)(Random.nextInt)
+      Stream(randomInts:_*).exists(isEven) shouldBe List(randomInts:_*).exists(isEven)
+      Stream(randomInts:_*).existsRecurse(isEven) shouldBe List(randomInts:_*).exists(isEven)
+    }
+  }
 }

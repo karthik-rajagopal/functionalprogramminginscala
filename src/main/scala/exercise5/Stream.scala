@@ -47,6 +47,21 @@ sealed trait Stream[+A] {
     }
     go(this, empty)
   }
+
+  def exists(p: A => Boolean): Boolean = this match {
+    case Cons(h, t) => p(h()) || t().exists(p)
+    case _ => false
+  }
+
+  def existsRecurse(p: A => Boolean): Boolean = {
+    @tailrec
+    def go(data: Stream[A]): Boolean = data match {
+      case Cons(h, t) => p(h()) || go(t())
+      case _ => false
+    }
+    go(this)
+  }
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
