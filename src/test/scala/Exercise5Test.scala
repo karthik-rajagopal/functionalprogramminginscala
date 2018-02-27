@@ -23,7 +23,7 @@ class Exercise5Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
         genSize <- Gen.choose(0, Int.MaxValue)
         genTake <- Gen.choose(0, Int.MaxValue) suchThat(_ <= genSize)
       } yield (genSize, genTake)) { case (n, takeSize) =>
-      Stream(0 to n).take(takeSize) shouldBe List(0 to n).take(takeSize)
+      Stream(0 to n).take(takeSize).toListRecurse shouldBe List(0 to n).take(takeSize)
     }
   }
 }
