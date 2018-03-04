@@ -79,5 +79,12 @@ class Exercise5Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
     }
   }
 
+  it should "append to the end of the steam" in {
+    forAll(Gen.choose(0, 10000)) { case (genSize) =>
+      val randomInts = Seq.fill(genSize)(Random.nextInt)
+      val randomAppend = Random.nextInt
+      Stream(randomInts:_*).append(Stream(randomAppend)).toListRecurse.reverse shouldBe List(randomInts :+ randomAppend:_*)
+    }
+  }
 
 }
