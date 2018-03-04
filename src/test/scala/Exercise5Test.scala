@@ -66,4 +66,8 @@ class Exercise5Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
       Stream(randomInts:_*).takeWhileUsingFoldRight(isEven).toListRecurse.reverse shouldBe List(randomInts:_*).takeWhile(isEven)
     }
   }
+
+  it should "add a 1 to each element in the list" in {
+    Stream(1, 2, 3).mapUsingFold(x => x + 1).toListRecurse.reverse shouldBe List(2, 3, 4)
+  }
 }

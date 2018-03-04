@@ -85,6 +85,10 @@ sealed trait Stream[+A] {
     foldRight(None: Option[A])((h, _) => Some(h))
   }
 
+  def mapUsingFold[B](f: A => B): Stream[B] = {
+    foldRight(empty[B])((h, t) => cons(f(h), t))
+  }
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
