@@ -11,6 +11,10 @@ class Exercise5Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
     val stream = Stream(1, 2, 3)
     stream.headOption should not be None
     stream.headOption shouldBe Some(1)
+
+    // using fold
+    stream.headOptionUsingFold should not be None
+    stream.headOptionUsingFold shouldBe Some(1)
   }
 
   it should "transform to a List" in {
