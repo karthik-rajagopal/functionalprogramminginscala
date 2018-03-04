@@ -20,5 +20,18 @@ class Exercise6Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
     }
   }
 
+  it should "generate a double between 0 and 1" in {
+    forAll(Gen.choose(Long.MinValue, Long.MaxValue)) { case (seed) =>
+      val rng = RNG(seed)
+      val result: Double = double(rng)._1
+      result > 0 shouldBe true
+      result < 1 shouldBe true
+    }
+  }
+
+
+
+
+
 
 }
