@@ -51,6 +51,19 @@ object RNG {
     val (doubleNum3, state3) = double(state2)
     ((doubleNum1, doubleNum2, doubleNum3), state3)
   }
+
+  def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
+    @tailrec
+    def go(rands: List[Int], state: RNG, count: Int): (List[Int], RNG) = {
+      if (count > 0) {
+        val (i, newState) = state.nextInt
+        go(i :: rands, newState, count - 1)
+      } else {
+        (rands, state)
+      }
+    }
+    go(List.empty, rng, count)
+  }
 }
 
 

@@ -60,11 +60,18 @@ class Exercise6Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
     }
   }
 
-
-
-
-
-
+  it should "generate random ints" in {
+    forAll(
+      for {
+        genSeed <- Gen.choose(Long.MinValue, Long.MaxValue)
+        genTake <- Gen.choose(0, 1000)
+      } yield (genSeed, genTake)) { case (seed, takeSize) =>
+      val initState = RNG(seed)
+      val (rands, newState) = ints(takeSize)(initState)
+      rands.size shouldBe takeSize
+      newState should not be initState
+    }
+  }
 
 
 }
