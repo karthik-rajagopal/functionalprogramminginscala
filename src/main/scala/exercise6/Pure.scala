@@ -105,6 +105,16 @@ object RNG {
     map2(ra, rb)((_, _))
   }
 
+  def randIntDouble: Rand[(Int, Double)] = both(int, double)
+
+  def randDoubleInt: Rand[(Double, Int)] = both(double, int)
+
+  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = {
+    fs.foldRight(unit(List[A]())) { case (a, acc) =>
+      map2(a, acc)(_ :: _)
+    }
+  }
+
 }
 
 

@@ -86,4 +86,15 @@ class Exercise6Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
     }
   }
 
+  it should "sequence a list of rands to rand of list" in {
+    forAll(
+      for {
+        genSeed <- Gen.choose(Long.MinValue, Long.MaxValue)
+        genSize <- Gen.choose(0, 1000)
+      } yield (genSeed, genSize)) { case (seed, size) =>
+      val initState = RNG(seed)
+      sequence(List.fill(size)(int)).apply(initState)._1.size shouldBe size
+    }
+  }
+
 }
