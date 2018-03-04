@@ -29,6 +29,39 @@ class Exercise6Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
     }
   }
 
+  it should "generate a int and double" in {
+    forAll(Gen.choose(Long.MinValue, Long.MaxValue)) { case (seed) =>
+      val rng = RNG(seed)
+      val ((i, d), newState) = intDouble(rng)
+      i.isInstanceOf[Int]
+      d.isInstanceOf[Double]
+      newState should not be rng
+    }
+  }
+
+  it should "generate a double and int" in {
+    forAll(Gen.choose(Long.MinValue, Long.MaxValue)) { case (seed) =>
+      val rng = RNG(seed)
+      val ((d, i), newState) = doubleInt(rng)
+      d.isInstanceOf[Double]
+      i.isInstanceOf[Int]
+      newState should not be rng
+    }
+  }
+
+  it should "generate 3 doubles" in {
+    forAll(Gen.choose(Long.MinValue, Long.MaxValue)) { case (seed) =>
+      val rng = RNG(seed)
+      val ((d1, d2, d3), newState) = double3(rng)
+      d1 should not be d2
+      d2 should not be d3
+      d3 should not be d1
+      newState should not be rng
+    }
+  }
+
+
+
 
 
 
