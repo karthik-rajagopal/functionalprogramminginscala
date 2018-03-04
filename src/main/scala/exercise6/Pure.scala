@@ -93,6 +93,13 @@ object RNG {
     map(nonNegative)(i => i/Int.MaxValue)
   }
 
+  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = {
+    rnd => {
+      val (a, state1) = ra(rnd)
+      val (b, state2) = rb(state1)
+      (f(a, b), state2)
+    }
+  }
 
 }
 
