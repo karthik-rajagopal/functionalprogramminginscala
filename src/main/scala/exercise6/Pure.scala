@@ -16,6 +16,19 @@ case class SimpleRNG(seed: Long) extends RNG {
 }
 
 object RNG {
+  type Rand[+A] = RNG => (A, RNG)
+
+  def int: Rand[Int] = _.nextInt
+
+  def unit[A](a: A): Rand[A] = rng => (a, rng)
+
+  def map[A, B](s: Rand[A])(f: A => B): Rand[B] = {
+    rng => {
+      val (a, rng2) = s(rng)
+      (f(a), rng2)
+    }
+  }
+
   def apply(seed: Long): RNG = SimpleRNG(seed)
 
   // function to generate a random integer between 0 and Int.Max (inclusive)
@@ -71,6 +84,15 @@ object RNG {
       (rand:: rands, newState)
     }
   }
+
+  def nonNegativeEven: Rand[Int] = {
+    map(nonNegative)(i => i - i % 2)
+  }
+
+  def double2(rng: RNG): Rand[Double] = {
+    map(nonNegative)(i => i/Int.MaxValue)
+  }
+
 
 }
 
