@@ -101,6 +101,18 @@ sealed trait Stream[+A] {
     foldRight(empty[B])((h, t) => f(h).append(t))
   }
 
+  // infinite streams
+  def ones: Stream[Int] = cons(1, ones)
+
+  def constant[A](a: A): Stream[A] = {
+    lazy val tail: Stream[A] = cons(a, tail)
+    tail
+  }
+
+  def from(n: Int): Stream[Int] = {
+    cons(n, from(n + 1))
+  }
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
