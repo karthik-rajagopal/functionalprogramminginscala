@@ -90,12 +90,12 @@ object List {
   }
 
   @tailrec
-  def foldLeft[A, B](as: List[A], z: B)(implicit f: (B, A) => B): B = {
+  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = {
     as match {
       case Nil => z
       // non tailrec code
       //case Cons(x, xs) => f(foldLeft(xs, z)(f), x)
-      case Cons(x, xs) => foldLeft(xs, f(z, x))
+      case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
     }
   }
 

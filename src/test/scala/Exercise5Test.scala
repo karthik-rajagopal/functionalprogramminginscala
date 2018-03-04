@@ -46,4 +46,12 @@ class Exercise5Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
       Stream(randomInts:_*).existsRecurse(isEven) shouldBe List(randomInts:_*).exists(isEven)
     }
   }
+
+  it should "return true if the predicate is valid for all elements in the stream" in {
+    forAll(Gen.choose(0, 10000) suchThat(_ % 2 == 0)) { case (genSize) =>
+      val isEven: Int => Boolean = x => (x & 1) == 0
+      val randomInts = Seq.fill(genSize)(Random.nextInt)
+      Stream(randomInts:_*).forAll(isEven) shouldBe List(randomInts:_*).forall(isEven)
+    }
+  }
 }

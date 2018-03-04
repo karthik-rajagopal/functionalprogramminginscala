@@ -62,6 +62,21 @@ sealed trait Stream[+A] {
     go(this)
   }
 
+  // function takes the second parameter by name
+  def foldRight[B](z: => B)(implicit f: (A, => B) => B): B = this match {
+    case Cons(h, t) => f(h(), t().foldRight(z))
+    case _ => z
+  }
+
+  def existsUsingFoldRight(p: A => Boolean): Boolean = {
+    foldRight(false)((a, b) => p(a) || b)
+  }
+
+  def forAll(p: A => Boolean): Boolean = this match {
+    case Cons(h, t) if p(h()) => t().forAll(p)
+    case _ => false
+  }
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
