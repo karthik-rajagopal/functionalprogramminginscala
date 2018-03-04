@@ -54,4 +54,12 @@ class Exercise5Test extends FlatSpecLike with Matchers with GeneratorDrivenPrope
       Stream(randomInts:_*).forAll(isEven) shouldBe List(randomInts:_*).forall(isEven)
     }
   }
+
+  it should "take while (using fold) predicate is true" in {
+    forAll(Gen.choose(0, 10000) suchThat(_ > 0)) { case (genSize) =>
+      val isEven: Int => Boolean = x => (x & 1) == 0
+      val randomInts = Seq.fill(genSize)(Random.nextInt)
+      Stream(randomInts:_*).takeWhileUsingFoldRight(isEven).toListRecurse.reverse shouldBe List(randomInts:_*).takeWhile(isEven)
+    }
+  }
 }
