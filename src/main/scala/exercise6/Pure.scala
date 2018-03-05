@@ -79,7 +79,7 @@ object RNG {
   }
 
   def intsUsingFold(count: Int)(rng: RNG): (List[Int], RNG) = {
-    (1 to count).foldLeft((List[Int](), rng)) { case ((rands, state), a) =>
+    (1 to count).foldLeft((List[Int](), rng)) { case ((rands, state), _) =>
       val (rand, newState) = state.nextInt
       (rand:: rands, newState)
     }
