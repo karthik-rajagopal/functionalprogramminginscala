@@ -115,6 +115,13 @@ object RNG {
     }
   }
 
+  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = {
+    rnd => {
+      val (a, x) = f(rnd)
+      g(a)(x)
+    }
+  }
+
 }
 
 
